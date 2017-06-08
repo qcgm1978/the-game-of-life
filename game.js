@@ -72,10 +72,35 @@ function Life(container, width=12, height=12) {
   function step() {
     // Hello, destructuring assignment:
     //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-    [present, future] = tick(present, future)  // tick is from board.js
-    
+    ;[present, future] = tick(present, future);  // tick is from board.js
+    // ⬆️ Why is there a semicolon at the beginning of this line?
+    //
+    // It's not necessary, but we have it there to avoid a confusing problem.
+    // Let's say you put a console.log at the start of this function, but
+    // forget the semicolon at the end of the line:
+    //
+    //     console.log('entered step')
+    //     [present, future] = tick(present, future);
+    //
+    // This is the one case in which automatic semicolon insertion can really bite
+    // you. Since the line begins with a `[` token, JS will assume that it *continues*
+    // the previous expression. That is, it will condense your code to this:
+    //
+    //     console.log('entered step')[present, future] = tick(present, future);
+    //
+    // Which will throw the confusing error:
+    //
+    //     TypeError: Cannot read property '#<Board>' of undefined
+    //
+    // Since it's trying to look up `present` inside the return value of `console.log`,
+    // which is undefined.
+    //
+    // In general, you should either be fastidious about ending lines with semicolons,
+    // or you should be sure to *begin* with a semicolon any line that could continue
+    // an expression—that's any line that starts with a (, [, or ` character.
+
     // Paint the new present
-    paint()
+    paint();
   }
 
   function play() {
