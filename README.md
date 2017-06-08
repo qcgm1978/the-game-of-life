@@ -25,7 +25,6 @@
    * Manipulate DOM elements to match the state of a model
    * [Attach events to DOM elements](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
    * Use intervals to manage animations
-   * Predict how `this` will be bound, particularly in the context of iterators and event listeners
    * Using [Event.target](https://developer.mozilla.org/en-US/docs/Web/API/Event/target) to handle events via bubbling
    * [Default arguments](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters)
    * [Array destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
