@@ -10,6 +10,7 @@
 * [View Controller](#view-controller)
     - [Table](#table)
     - [Control panel](#control-panel)
+    - [`step`](#step)
     - [`paint`](#paint)
     - [`play`, `stop`, `togglePlaying`](#play-stop-toggleplaying)
     - [`clear` and `random`](#clear-and-random)
