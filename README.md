@@ -18,7 +18,7 @@
 * [Bonus](#bonus)
     - [Shape Loader](#shape-loader)
 * [Conclusion](#conclusion)
-  
+
 ## Learning Objectives
    * Read and write grid data in a 1D array
    * Implement a cell reducer for a cellular automata
@@ -167,7 +167,7 @@ At the end of `step`, `present` represents the current state of the game, which 
 
 ### `paint`
 Up to this point, our game has, visually, been pretty sad. `paint` is going to change that. This function
-takes whatever is in `present`—the current state of the game—and adjusts the DOM to match it. 
+takes whatever is in `present`—the current state of the game—and adjusts the DOM to match it.
 
 You can take a few approaches to this. You might find all the `<td>` elements under the `<table>`, and
 ensure that they have the `alive` class if and only if their `coord` is alive in the `present`.
@@ -237,11 +237,10 @@ the CPU almost completely free, and would mean that almost no data is transferre
 frame. Essentially, after setup, the only thing we'd have to do each frame is tell the GPU, "ok, [go](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays)".
 
 ## Conclusion
-This workshop is a classic exercise in writing game logic and combining it with DOM manipulation, particularly event listeners, to create a user interface. Keys to success when creating your Game of Life included writing utility functions to keep your code DRY; using an object literal namespacing pattern for more readable and extensible code; and the careful application of event listeners (and `this`) to update DOM elements. On top of that, you had even more practice with vanilla Javascript DOM manipulation and functional programming. Whew!
+This workshop is a classic exercise in writing game logic and combining it with DOM manipulation, particularly event listeners, to create a user interface. Keys to success when creating your Game of Life included writing utility functions to keep your code DRY, and the careful application of event listeners (and `this`) to update DOM elements. On top of that, you had even more practice with vanilla Javascript DOM manipulation and functional programming. Whew!
 
 ### Main Takeaways
 * Conway's Game of Life is one example of a cellular automaton. It has a particular set of rules that govern the state of each cell in a grid, depending on the state of its neighbors.
-* In order to to write logic to control this particular game play, you must first capture the game state of each cell, and _then_ update them.
+* In order to write logic to control this particular game play, you must first capture the game state of _each_ cell, and _then_ update them.
 * Event listeners/click handlers help to create an interactive user interface, but pay close attention to the value of `this` when using them.
-* Using object literal namespacing will help you maintain a pristine global scope, and result in more readable and extensible code; again, though, pay close attention when using `this`.
 * In general, you should aim for DRY and well-organized code.
