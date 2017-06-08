@@ -20,7 +20,7 @@
   
 ## Learning Objectives
    * Read and write grid data in a 1D array
-   * Implement a cell reducer for a cellular atomata
+   * Implement a cell reducer for a cellular automata
    * Manipulate DOM elements to match the state of a model
    * [Attach events to DOM elements](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
    * Use intervals to manage animations
@@ -136,30 +136,45 @@ You need to implement all five of these actions for the game. Step is wired up, 
 ### `step`
 
 The game must evolve, visually, step by step. The `step` function has been provided for you in `game.js`,
-but I want us to look at it for a moment. Step calls `tick`, and then does something very strange.
+but I want us to look at it for a moment. Step calls `tick`, and then does something very strange with the return value:
 
 ```javascript
-// Swap the present and future boards
-// (The future board is now the present, and we'll re-use the present
-// board for the next step).
-var temp = present
-present = future
-future = temp
+[present, future] = tick(present, future)
 ```
 
-Instead of creating a new board for each tick, we *read* from the present, and *write* to
-the future, and then we swap the two buffers. What was future is now present. And what was present is now
-irrelevant, so we can overwrite it in the next tick.
+This is a [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment). We are capturing the return value of `tick` into the local variables `present`
+and `future`. We could write it out long form like so:
 
-This technique, called *double-buffering*, allows us to avoid allocating an endless series of arrays to
-hold board data.
+```javascript
+var result = tick(present, future)
+present = result[0]
+future = result[1]
+```
+
+Here's the order in which things happen:
+
+  1. `tick` is called. `tick` reads from `present`, applies `rules` (unspecified, so we use the `conway` rules), and writes to `future`.
+  2. `tick` returns `[future, present]`
+  3. We use destructuring to assign `[present, future]` to the return value of `tick`, which
+     is `[future, present]`. **This swaps the board buffers.**
+
+The buffer swap is important. The `step` function *advances time*. After `tick` is called, what was future is now present. And what was present is now irrelevant, so we can repurpose it as `future`. Its contents are irrelevant—it's just a big blank slate where we can store the data for the next tick.
+
+This technique, called [*double-buffering*](https://en.wikipedia.org/wiki/Multiple_buffering#Double_buffering_in_computer_graphics), allows us to avoid allocating an endless series of arrays to hold board data. Instead, we only allocate two, and swap between them.
 
 At the end of `step`, `present` represents the current state of the game, which we want to display on the DOM.
-Alas, we're still not done, because the DOM still needs to get updated
 
 ### `paint`
 Up to this point, our game has, visually, been pretty sad. `paint` is going to change that. This function
 takes whatever is in `present`—the current state of the game—and adjusts the DOM to match it. 
+
+You can take a few approaches to this. You might find all the `<td>` elements under the `<table>`, and
+ensure that they have the `alive` class if and only if their `coord` is alive in the `present`.
+
+Querying for all the `<td>`s is kindof expensive though, so you may alternately decide to hold on to them
+in an array when we create them in `createTable`.
+
+There are other approaches, of course.
 
 ### `play`, `stop`, `togglePlaying`
 Once you have a working step function, you should fill in the `play` function to run `step` every 100 milliseconds or so. You can make this time variable if you want to check the evolution of the game. `stop`
@@ -206,6 +221,19 @@ You can also check out the GOL wiki [here](http://conwaylife.com/wiki/Main_Page)
 1. Wire it up to a function that reads an uploaded starting pattern into your app so you can play them in your Game of Life engine.
 
 Check out the first couple sections of the Mozilla docs' [guide on working with file inputs](https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications). Also, you'll find that the [FileReader API](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) is essential here.
+
+### Canvas
+
+Change the view controller to use a [`<canvas>`](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) rather than a `<table>` to display the game. You'll need to modify `toggleCellFromEvent`, `createTable`, and `paint` to work with the canvas.
+
+Drawing lots of small things with canvas is generally much faster than drawing them with the DOM.
+
+If you're feeling particularly ambitious, you might use a [`webgl`](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial) canvas context to render the game, rather than a `2d` context. This would be the fastest rendering path by far—with `webgl`, we could upload the
+boards to the GPU's memory, and write small programs (shaders) that run on the GPU to draw each cell.
+
+The ultimate conclusion of this approach would be to run the game of life itself on the GPU. This would leave
+the CPU almost completely free, and would mean that almost no data is transferred to or from the GPU every
+frame. Essentially, after setup, the only thing we'd have to do each frame is tell the GPU, "ok, [go](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays)".
 
 ## Conclusion
 This workshop is a classic exercise in writing game logic and combining it with DOM manipulation, particularly event listeners, to create a user interface. Keys to success when creating your Game of Life included writing utility functions to keep your code DRY; using an object literal namespacing pattern for more readable and extensible code; and the careful application of event listeners (and `this`) to update DOM elements. On top of that, you had even more practice with vanilla Javascript DOM manipulation and functional programming. Whew!
