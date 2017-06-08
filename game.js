@@ -48,7 +48,7 @@ function Life(container, width=12, height=12) {
   
   function toggleCellFromEvent(event) {
     // FIXME: This currently always toggles cell (0, 0).
-    // How do we get the of the cell that was clicked on?
+    // How do we get the coordinate of the cell that was clicked on?
     // HINT: https://developer.mozilla.org/en-US/docs/Web/API/Event/target
     var cell = document.getElementById('0-0'); // ⬅️ Fix me
     present.toggle(cell.coord)
