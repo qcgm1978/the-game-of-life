@@ -40,6 +40,23 @@ describe('Board::indexFor(coords: [row, col])', () => {
   })
 })
 
+describe('Board::get(coords)', () => {
+  var board; beforeEach(() =>
+    board = new Board(3, 3, [
+      0, 1, 0,
+      0, 0, 0,
+      1, 1, 1
+    ]))
+
+  it('returns the value of cells that are there', () => {    
+    expect(board.get([0, 1])).toEqual(1)    
+  })
+
+  it('returns 0 for cells that are off the board', () => {
+    expect(board.get([10, 10])).toEqual(0)
+  })
+})
+
 describe('Board::set(coords, value)', () => {
   var board; beforeEach(() => board = new Board)
 
@@ -63,23 +80,24 @@ describe('Board::set(coords, value)', () => {
   })
 })
 
-describe('Board::get(coords)', () => {
-  var board; beforeEach(() =>
-    board = new Board(3, 3, [
-      0, 1, 0,
-      0, 0, 0,
-      1, 1, 1
-    ]))
-
-  it('returns the value of cells that are there', () => {    
-    expect(board.get([0, 1])).toEqual(1)    
+describe('Board::livingNeighbors(coords)', () => {
+  it('treats cells off the board as dead', () => {
+    var board = new Board(3, 3, [1, 1, 1,
+                                 1, 1, 1,
+                                 1, 1, 1])
+    expect(board.livingNeighbors([0, 0])).toEqual(3)
   })
 
-  it('returns 0 for cells that are off the board', () => {
-    expect(board.get([10, 10])).toEqual(0)
+  it("doesn't include the cell itself", () => {
+    var board = new Board(3, 3, [1, 1, 1, 1, 1, 1, 1, 1, 1])
+    expect(board.livingNeighbors([1, 1])).toEqual(8)
+  })
+
+  it('counts only living cells', () => {
+    var board = new Board(3, 3, [1, 1, 1, 1, 1, 1, 0, 0, 0])
+    expect(board.livingNeighbors([1, 1])).toEqual(5)
   })
 })
-
 
 describe('Board::toggle(coords, value)', () => {
   var board; beforeEach(() => board = new Board)
@@ -97,25 +115,6 @@ describe('Board::toggle(coords, value)', () => {
     expect(board.get(coord)).toBeTruthy()
     board.toggle(coord)
     expect(board.get(coord)).toBeFalsy()
-  })
-})
-
-describe('Board::livingNeighbors(coords)', () => {
-  it('treats cells off the board as dead', () => {
-    var board = new Board(3, 3, [1, 1, 1,
-                                 1, 1, 1,
-                                 1, 1, 1])
-    expect(board.livingNeighbors([0, 0])).toEqual(3)
-  })
-
-  it("doesn't include the cell itself", () => {
-    var board = new Board(3, 3, [1, 1, 1, 1, 1, 1, 1, 1, 1])
-    expect(board.livingNeighbors([1, 1])).toEqual(8)
-  })
-
-  it('counts only living cells', () => {
-    var board = new Board(3, 3, [1, 1, 1, 1, 1, 1, 0, 0, 0])
-    expect(board.livingNeighbors([1, 1])).toEqual(5)
   })
 })
 

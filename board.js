@@ -77,6 +77,17 @@ Board.prototype.toggle = function(coords) {
 }
 
 /**
+ * Give the vitals of a cell (its current state, and how many living neighbors it
+ * currently has), return whether it will be alive in the next tick. 
+ * 
+ * @param {Boolean} isAlive 
+ * @param {Number} numLivingNeighbors 
+ */
+function conway(isAlive, numLivingNeighbors) {
+  // TODO
+}
+
+/**
  * Given a present board, a future board, and a rule set, apply
  * the rules to the present and modify the future.
  * 
@@ -87,15 +98,4 @@ Board.prototype.toggle = function(coords) {
 function tick(present, future, rules=conway) {
   // TODO
   return [future, present]
-}
-
-/**
- * Give the vitals of a cell (its current state, and how many living neighbors it
- * currently has), return whether it will be alive in the next tick. 
- * 
- * @param {Boolean} isAlive 
- * @param {Number} numLivingNeighbors 
- */
-function conway(isAlive, numLivingNeighbors) {
-  // TODO
 }
