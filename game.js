@@ -1,10 +1,10 @@
-var mainElement = document.getElementById('main')
+var mainElement = document.getElementById('main');
 if (mainElement) {
-  var game = Life(mainElement)
+  var game = Life(mainElement);
 
   // Connect #step_btn to the step function
   document.getElementById('step_btn')
-    .addEventListener('click', game.step)
+    .addEventListener('click', game.step);
 
   // TODO: Connect other buttons.
 }
@@ -24,17 +24,17 @@ function Life(container, width=12, height=12) {
   container.appendChild(table);
 
   // Add a mouse down listener to our table
-  table.addEventListener('mousedown', toggleCellFromEvent)
+  table.addEventListener('mousedown', toggleCellFromEvent);
 
   function createTable() {
     // create <table> element
     var table = document.createElement('table');       // <table
-    table.classList.add('board')                       //   class='board'>
+    table.classList.add('board');                       //   class='board'>
     for (var r = 0; r < height; r++) {
       var tr = document.createElement('tr');           //   <tr>
       for (var c = 0; c < width; c++) {                //     For instance, at r=2, c=3:
         var td = document.createElement('td');         //     <td
-        td.id = `${r}-${c}`                            //       id="2-3">
+        td.id = `${r}-${c}`;                            //       id="2-3">
         // We'll put the coordinate on the cell
         // Element itself, letting us fetch it
         // in a click listener later.
@@ -43,26 +43,39 @@ function Life(container, width=12, height=12) {
       }
       table.appendChild(tr);                           //   </tr>
     }                                                  //  </table>
-    return table
+    return table;
   }
 
   function toggleCellFromEvent(event) {
     // FIXME: This currently always toggles cell (0, 0).
     // How do we get the coordinate of the cell that was clicked on?
+    var clickedCoords;
+
+    document.getElementsByTagName(td).addEventListener('click', function() {
+      clickedCoords = this.id;
+    });
     // HINT: https://developer.mozilla.org/en-US/docs/Web/API/Event/target
 
      var cell = event.target ;//document.getElementById('0-0'); // ⬅️ Fix me
-    present.toggle(cell.coord)
-    paint()
+    present.toggle(cell.coord);
+    paint();
   }
 
   function paint() {
     // TODO:
-    //   1. For each <td> in the table:
-    //     a. If its cell is alive, give the <td> the `alive` CSS class.
-    //     b. Otherwise, remove the `alive` class.
-    var tds = Array.from(document.getElementsByTagName("td"));
-    console.log(tds);
+    // 
+    // var tds = Array.from(document.getElementsByTagName("td"));
+    // //   1. For each <td> in the table:
+    //   tds.forEach(function(td) {
+    // //     a. If its cell is alive, give the <td> the `alive` CSS class.
+    //     if(/* conway function result sets this cell to alive*/){
+    //       td.classList.add('alive');
+    //     }
+    // //     b. Otherwise, remove the `alive` class.
+    //     else if (/* conway fn result says this cell is dead and cell.classList isAlive*/) {
+    //       td.classList.remove('alive');
+    //     }
+    //   });
     // To find all the <td>s in the table, you might query the DOM for them, or you
     // could choose to collect them when we create them in createTable.
     //  td.alive
@@ -132,5 +145,5 @@ function Life(container, width=12, height=12) {
     // TODO: Randomize the board
   }
 
-  return {play, step, stop, togglePlaying, random, clear}
-};
+  return {play, step, stop, togglePlaying, random, clear};
+}
