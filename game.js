@@ -117,8 +117,9 @@ function Life(container, width=12, height=12) {
   function play() {
     // TODO:
     // Start playing by running the `step` function
+    step();
     // automatically repeatedly every fixed time interval
-
+    var playInterval = window.setInterval(step(), 500);
     // HINT:
     // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
   }
@@ -126,19 +127,29 @@ function Life(container, width=12, height=12) {
   function stop() {
     // TODO: Stop autoplay.
     // HINT:
+      window.clearInterval(playInterval);
     // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
   }
 
   function togglePlaying() {
     // TODO: If we're playing, stop. Otherwise, start playing.
+    var playBtn = document.getElementById("play_btn");
+    playBtn.addEventListener('click', function(){
+      // if playing stop and vice versa
+    });
   }
 
   function clear() {
     // TODO: Clear the board
+    var clearBtn = document.getElementById('clear_btn');
+    clearBtn.addEventListener('click',function (){
+      // remove alive class from all tds
+    });
   }
 
   function random() {
     // TODO: Randomize the board
+    
   }
 
   return {play, step, stop, togglePlaying, random, clear};
