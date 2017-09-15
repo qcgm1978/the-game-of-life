@@ -49,11 +49,7 @@ function Life(container, width=12, height=12) {
   function toggleCellFromEvent(event) {
     // FIXME: This currently always toggles cell (0, 0).
     // How do we get the coordinate of the cell that was clicked on?
-    var clickedCoords;
 
-    document.getElementsByTagName(td).addEventListener('click', function() {
-      clickedCoords = this.id;
-    });
     // HINT: https://developer.mozilla.org/en-US/docs/Web/API/Event/target
 
      var cell = event.target ;//document.getElementById('0-0'); // ⬅️ Fix me
@@ -63,7 +59,7 @@ function Life(container, width=12, height=12) {
 
   function paint() {
     // TODO:
-    // 
+    //
     // var tds = Array.from(document.getElementsByTagName("td"));
     // //   1. For each <td> in the table:
     //   tds.forEach(function(td) {
