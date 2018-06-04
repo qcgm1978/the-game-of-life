@@ -15,7 +15,7 @@ if (mainElement) {
     .addEventListener('click', game.random);
 }
 
-function Life(container, width=12, height=12) {
+function Life(container, width = 12, height = 12) {
   var present = new Board(width, height);
   var future = new Board(width, height);
 
@@ -58,8 +58,11 @@ function Life(container, width=12, height=12) {
   }
 
   function step(rules) {
-    ;[present, future] = tick(present, future, rules);  
+    [present, future, state] = tick(present, future, rules);
     paint();
+    if (state) {
+      stop()
+    }
   }
 
   let interval = null;
@@ -68,21 +71,21 @@ function Life(container, width=12, height=12) {
   }
 
   function stop() {
-      clearInterval(interval);
-      interval = null;
+    clearInterval(interval);
+    interval = null;
   }
 
   function togglePlaying() {
-   interval ? stop() : play();
+    interval ? stop() : play();
   }
 
   function clear() {
-   step(() => 0);    
+    step(() => 0);
   }
 
   function random() {
-    step(() => Math.round(Math.random()));    
+    step(() => Math.round(Math.random()));
   }
 
-  return {play, step, stop, togglePlaying, random, clear};
+  return { play, step, stop, togglePlaying, random, clear };
 }

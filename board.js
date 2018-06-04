@@ -5,7 +5,7 @@
  * @param {Int} height
  * @param {Array<Int>} cells the array to use for the cells (default: new Uint8Array(width * height))
  */
-function Board(width=32, height=32, cells) {
+function Board(width = 32, height = 32, cells) {
   this.width = width
   this.height = height
   // We'll store our cells in a 1D typed array.
@@ -16,7 +16,8 @@ function Board(width=32, height=32, cells) {
   //
   // Since we only really need to track 1 bit per cell, this is positively
   // luxurious for our needs.
-  this.cells = cells || new Uint8Array(width * height)
+  this.cells = cells || new Uint8Array(width * height);
+  this.state = []
 }
 
 /**
@@ -25,7 +26,7 @@ function Board(width=32, height=32, cells) {
  * Given an array of coordinates [row, col], return the index of that cell in this
  * board's cells array.
  */
-Board.prototype.indexFor = function([row, col]) {
+Board.prototype.indexFor = function ([row, col]) {
   // OMG, a destructured parameter! ⬆️⬆️⬆️⬆️⬆️⬆️
   //
   // This digs into the array we were passed, plucks out the first
@@ -54,7 +55,7 @@ Board.prototype.get = function (coords) {
  *
  * Set the value of the board at coords to value.
  */
-Board.prototype.set = function(coords, value) {
+Board.prototype.set = function (coords, value) {
   return this.cells[this.indexFor(coords)] = value;
 }
 
@@ -63,16 +64,16 @@ Board.prototype.set = function(coords, value) {
  *
  * Return the count of living neighbors around a given coordinate.
  */
-Board.prototype.livingNeighbors = function([row, col]) {
+Board.prototype.livingNeighbors = function ([row, col]) {
   // TODO: Return the count of living neighbors.
   var main = this.get([row, col]);
   var living = 0;
-  for (var colm = col - 1; colm < col + 2; colm++){
-    for (var rows = row - 1; rows < row + 2; rows++){
+  for (var colm = col - 1; colm < col + 2; colm++) {
+    for (var rows = row - 1; rows < row + 2; rows++) {
       living += this.get([rows, colm]);
     }
   }
-return living - main;
+  return living - main;
 };
 
 /**
@@ -80,13 +81,13 @@ return living - main;
  *
  * Toggle the cell at coords from alive to dead or vice versa.
  */
-Board.prototype.toggle = function(coords) {
+Board.prototype.toggle = function (coords) {
   var state = this.get(coords);
-    if (state === 0){
-  return this.set(coords, 1);
-    } else {
-   return this.set(coords, 0);
-    }
+  if (state === 0) {
+    return this.set(coords, 1);
+  } else {
+    return this.set(coords, 0);
+  }
 
 
 }
@@ -99,15 +100,15 @@ Board.prototype.toggle = function(coords) {
  * @param {Number} numLivingNeighbors
  */
 function conway(isAlive, numLivingNeighbors) {
-if (isAlive == true){
-    if (numLivingNeighbors < 2 || numLivingNeighbors > 3){
+  if (isAlive == true) {
+    if (numLivingNeighbors < 2 || numLivingNeighbors > 3) {
       isAlive = false;
     } else {
       return isAlive;
     }
-} else if (numLivingNeighbors === 3){
+  } else if (numLivingNeighbors === 3) {
     isAlive = true;
-}
+  }
   return isAlive;
 }
 
@@ -119,16 +120,34 @@ if (isAlive == true){
  * @param {Board!} future (is mutated)
  * @param {(Boolean, Int) -> Boolean} rules (default: conway)
  */
-function tick(present, future, rules=conway) {
-  var applied;
-  for (var row = 0; row < present.height; row++){
-    for (var col = 0; col < present.width; col++){
+var states = []
+function tick(present, future, rules = conway) {
+  var applied, numSame = 0;
+  for (var row = 0; row < present.height; row++) {
+    for (var col = 0; col < present.width; col++) {
       var status = present.get([row, col]);
       var neigh = present.livingNeighbors([row, col]);
       applied = rules(status, neigh);
+      if (rules === conway && applied === status) {
+        numSame++;
+      }
       future.set([row, col], applied);
     }
   }
-  return [future, present];
+  let ret = [future, present];
+  if (numSame === present.cells.length && numSame > 0) {
+    console.log('stable state');
+    ret.push(true);
+    // return;
+    // stop()
+    // debugger;
+  }
+  states.push(future);
+  const lastTen = states.slice(-10)
+  if (lastTen.slice(0, 5).join() == lastTen.slice(5, 10).join()) {
+    console.log('state oscillation')
+    ret.push(true);
+  }
+  return ret;
 }
 
